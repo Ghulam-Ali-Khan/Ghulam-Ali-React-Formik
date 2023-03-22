@@ -1,5 +1,7 @@
-import { useState } from 'react'
-import {useFormik} from 'formik'
+import { useState } from 'react';
+import {useFormik} from 'formik';
+import * as Yup from 'yup';
+
 
 function App() {
   const formik = useFormik({
@@ -10,10 +12,25 @@ function App() {
       status:"",
       counrty:"",
     },
+    validationSchema:Yup.object({
+        username:Yup.string()
+        .max(5, "Username must be less than 5 characters")
+        .required("this is required filed"),
+       
+          name:Yup.string()
+          .required("this is required field"),
+        email:Yup.string()
+        .email("Please Enter A Valid Email")
+        .required("this field Is required"),
+        
+    }),
     onSubmit:(values)=>{
       console.log("Form Submitted : ", values);
     }
   });
+
+
+  console.log(formik.errors);
 
   return (
     <div >
@@ -21,24 +38,30 @@ function App() {
         <input  
         type="text"
         name="username"
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         value= {formik.values.username}
         placeholder="Username"
         />
+        {formik.errors.username && <p style={{color:"red"}}>{formik.errors.username}</p>}
         <input  
         type="text"
         name="name"
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         value= {formik.values.name}
         placeholder="Name"
         />
+        {formik.errors.name && <p style={{color:"red"}}>{formik.errors.name}</p>}
         <input  
         type="email"
         name="email"
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         value= {formik.values.email}
         placeholder="Email"
         />
+        {formik.errors.email && <p style={{color:"red"}}>{formik.errors.email}</p>}
         <label htmlFor="">Single</label>
         <input type="radio" name='status' value="single" onChange={formik.handleChange}/>
         <label htmlFor="">Coder</label>
